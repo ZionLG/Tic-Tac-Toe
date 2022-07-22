@@ -11,6 +11,20 @@ const player = (name, symbol) => {
 
 const displayController = (() => {
   const $restartBtn = document.getElementById("restart");
+  const $oneScore = document.getElementById("one-score");
+  const $tieScore = document.getElementById("tie-score");
+  const $twoScore = document.getElementById("two-score");
+
+  const oneWon = () => {
+    $oneScore.innerText = Number($oneScore.innerText) + 1 + "";
+  };
+  const twoWon = () => {
+    $twoScore.innerText = Number($twoScore.innerText) + 1 + "";
+  };
+
+  const tie = () => {
+    $tieScore.innerText = Number($tieScore.innerText) + 1 + "";
+  };
 
   const restartGame = () => {
     gameBoard.clearBoard();
@@ -30,6 +44,9 @@ const displayController = (() => {
   return {
     showRestart,
     HideRestart,
+    oneWon,
+    twoWon,
+    tie,
   };
 })();
 
@@ -111,19 +128,19 @@ const gameBoard = (() => {
 
   const winAction = () => {
     if (checkWin()) {
-      console.log(
-        currentPlayer.getSymbol() +
-          " " +
-          currentPlayer.getName() +
-          " Won the game"
-      );
+      if (currentPlayer === firstPlayer) displayController.oneWon();
+      else displayController.twoWon();
+
       displayController.showRestart();
+
       return true;
     } else if (!board.includes("")) {
-      console.log("Tie");
+      displayController.tie();
       displayController.showRestart();
+
       return true;
     }
+
     return false;
   };
   render();
