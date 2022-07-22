@@ -56,7 +56,7 @@ const gameBoard = (() => {
                "", "", "",
                "", "", ""];
 
-  let startedGame = true;
+  let startedGame = false;
   const firstPlayer = player("Player 1", "O");
   const secondPlayer = player("Player 2", "X");
   let currentPlayer = firstPlayer;

@@ -6,8 +6,35 @@
     <title>Tic Tac Toe</title>
   </head>
   <body>
-    <header>Tic Tac Toe</header>
+    <header>
+      <button>Show Settings</button>
+      <div>Tic Tac Toe</div>
+    </header>
     <main>
+      <form>
+        <div id="players-conainer">
+          <div>Enter Player Name's</div>
+
+          <label for="player-one">Player 1</label>
+          <input type="text" name="player-one" id="player-one" />
+
+          <label for="player-two">Player 2</label>
+          <input type="text" name="player-two" id="player-two" />
+        </div>
+        <div id="human-ai">
+          <div>Ai / Human</div>
+          <label for="ai"
+            >AI Player <input type="radio" name="enemy" id="ai" required />
+          </label>
+
+          <label for="human"
+            >Human Player
+            <input type="radio" name="enemy" id="human" required />
+          </label>
+          <button type="submit" id="start-game">Start</button>
+        </div>
+      </form>
+
       <button id="restart">Restart Game</button>
       <div id="game-container"></div>
       <div id="score-container">
