@@ -7,7 +7,7 @@
   </head>
   <body>
     <header>
-      <button>Show Settings</button>
+      <button id="settings-btn">Show Settings</button>
       <div>Tic Tac Toe</div>
     </header>
     <main>
@@ -24,12 +24,12 @@
         <div id="human-ai">
           <div>Ai / Human</div>
           <label for="ai"
-            >AI Player <input type="radio" name="enemy" id="ai" required />
+            >AI Player <input type="radio" name="enemy" id="ai" />
           </label>
 
           <label for="human"
             >Human Player
-            <input type="radio" name="enemy" id="human" required />
+            <input type="radio" name="enemy" id="human" checked />
           </label>
           <button type="submit" id="start-game">Start</button>
         </div>

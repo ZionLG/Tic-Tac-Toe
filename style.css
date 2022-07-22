@@ -131,4 +131,5 @@ input[type="text"] {
 
 input[type="text"]:focus {
   box-shadow: none;
+  background-color: #222831;
 }

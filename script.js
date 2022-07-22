@@ -11,19 +11,28 @@ const player = (name, symbol) => {
 
 const displayController = (() => {
   const $restartBtn = document.getElementById("restart");
-  const $oneScore = document.getElementById("one-score");
-  const $tieScore = document.getElementById("tie-score");
-  const $twoScore = document.getElementById("two-score");
+  const $oneCard = document.getElementById("one-container");
+  const $tieCard = document.getElementById("tie-container");
+  const $twoCard = document.getElementById("two-container");
+  const $startBtn = document.getElementById("start-game");
+  const $settingsBtn = document.getElementById("settings-btn");
+
+  const $playerOneName = document.getElementById("player-one");
+  const $playerTwoName = document.getElementById("player-two");
+  const $form = document.getElementsByTagName("form")[0];
 
   const oneWon = () => {
-    $oneScore.innerText = Number($oneScore.innerText) + 1 + "";
+    $oneCard.children[1].innerText =
+      Number($oneCard.children[1].innerText) + 1 + "";
   };
   const twoWon = () => {
-    $twoScore.innerText = Number($twoScore.innerText) + 1 + "";
+    $twoCard.children[1].innerText =
+      Number($twoCard.children[1].innerText) + 1 + "";
   };
 
   const tie = () => {
-    $tieScore.innerText = Number($tieScore.innerText) + 1 + "";
+    $tieCard.children[1].innerText =
+      Number($tieCard.children[1].innerText) + 1 + "";
   };
 
   const restartGame = () => {
@@ -31,7 +40,41 @@ const displayController = (() => {
     displayController.HideRestart();
   };
 
+  const startGame = (e) => {
+    e.preventDefault();
+    $form.style.display = "none";
+    $settingsBtn.style.display = "inline";
+    if ($playerOneName.value !== "") {
+      $oneCard.children[0].innerText = $playerOneName.value + " - O";
+    } else {
+      $oneCard.children[0].innerText = "Player 1 - O";
+    }
+    console.log($twoCard.children[0].innerText);
+
+    if ($playerTwoName.value !== "") {
+      $twoCard.children[0].innerText = $playerTwoName.value + " - X";
+    } else {
+      $twoCard.children[0].innerText = "Player 2 - X";
+    }
+    gameBoard.startGame();
+  };
+
+  const resetScore = () => {
+    $tieCard.children[1].innerText = "0";
+    $oneCard.children[1].innerText = "0";
+    $twoCard.children[1].innerText = "0";
+  };
+
+  const showSettings = () => {
+    $form.style.display = "flex";
+    $settingsBtn.style.display = "none";
+    resetScore();
+    restartGame();
+  };
+
   $restartBtn.addEventListener("click", restartGame);
+  $startBtn.addEventListener("click", startGame);
+  $settingsBtn.addEventListener("click", showSettings);
 
   const showRestart = () => {
     $restartBtn.style.display = "block";
@@ -72,6 +115,15 @@ const gameBoard = (() => {
     return gridBlock;
   };
 
+  const startGame = () => {
+    startedGame = true;
+    render();
+  };
+
+  const pauseGame = () => {
+    startedGame = false;
+    render();
+  };
   const render = () => {
     $gameContainer.replaceChildren();
     board.forEach((element) => {
@@ -149,5 +201,7 @@ const gameBoard = (() => {
     firstPlayer,
     secondPlayer,
     clearBoard,
+    startGame,
+    pauseGame,
   };
 })();
