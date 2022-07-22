@@ -1,0 +1,27 @@
+html,
+body {
+  margin: 0;
+  padding: 0;
+}
+
+main {
+  display: flex;
+  justify-content: center;
+}
+
+#game-container {
+  background-color: black;
+  display: grid;
+  grid-template-columns: repeat(3, 10rem);
+  grid-template-rows: repeat(3, 10rem);
+  gap: 2px;
+  border: solid black 2px;
+}
+
+#game-container > div {
+  background-color: white;
+  font-size: 7rem;
+  display: grid;
+  justify-content: center;
+  align-items: center;
+}
