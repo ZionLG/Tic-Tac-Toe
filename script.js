@@ -112,6 +112,14 @@ const gameBoard = (() => {
       gridBlock.addEventListener("click", addMark);
     }
     gridBlock.innerText = element;
+    if (element === "O") {
+      gridBlock.style.color = "#0092ca";
+    }
+
+    if (element === "X") {
+      gridBlock.style.color = "tomato";
+    }
+
     return gridBlock;
   };
 

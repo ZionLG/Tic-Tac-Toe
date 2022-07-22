@@ -52,7 +52,7 @@ button:hover {
 
 #game-container {
   margin-top: 25px;
-  background-color: #0092ca;
+  background-color: #222831;
   display: grid;
   box-shadow: 5px 5px 4px black;
   grid-template-columns: repeat(3, 9rem);
@@ -61,7 +61,7 @@ button:hover {
 }
 
 #game-container > div {
-  color: #0092ca;
+  color: #222831;
   background-color: #eeeeee;
   font-size: 7rem;
   display: grid;
