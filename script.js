@@ -70,6 +70,7 @@ const displayController = (() => {
     $settingsBtn.style.display = "none";
     resetScore();
     restartGame();
+    gameBoard.pauseGame();
   };
 
   $restartBtn.addEventListener("click", restartGame);
