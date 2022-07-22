@@ -9,12 +9,37 @@ const player = (name, symbol) => {
   return { getName, setName, getSymbol };
 };
 
+const displayController = (() => {
+  const $restartBtn = document.getElementById("restart");
+
+  const restartGame = () => {
+    gameBoard.clearBoard();
+    displayController.HideRestart();
+  };
+
+  $restartBtn.addEventListener("click", restartGame);
+
+  const showRestart = () => {
+    $restartBtn.style.display = "block";
+  };
+
+  const HideRestart = () => {
+    $restartBtn.style.display = "none";
+  };
+
+  return {
+    showRestart,
+    HideRestart,
+  };
+})();
+
 const gameBoard = (() => {
   // prettier-ignore
   let board = ["", "", "",
                "", "", "",
                "", "", ""];
 
+  let startedGame = true;
   const firstPlayer = player("Player 1", "O");
   const secondPlayer = player("Player 2", "X");
   let currentPlayer = firstPlayer;
@@ -23,7 +48,9 @@ const gameBoard = (() => {
 
   const createHTMLElement = (element) => {
     const gridBlock = document.createElement("div");
-    gridBlock.addEventListener("click", addMark);
+    if (startedGame) {
+      gridBlock.addEventListener("click", addMark);
+    }
     gridBlock.innerText = element;
     return gridBlock;
   };
@@ -43,7 +70,7 @@ const gameBoard = (() => {
 
     board[index] = currentPlayer.getSymbol();
     render();
-    if (!checkWin()) changePlayer();
+    if (!winAction()) changePlayer();
     return true;
   };
 
@@ -66,9 +93,11 @@ const gameBoard = (() => {
              "", "", ""];
 
     currentPlayer = firstPlayer;
+    render();
   };
+
   const checkWin = () => {
-    if (
+    return (
       (board[0] === board[1] && board[0] === board[2] && board[0] !== "") ||
       (board[3] === board[4] && board[3] === board[5] && board[3] !== "") ||
       (board[6] === board[7] && board[6] === board[8] && board[6] !== "") ||
@@ -77,27 +106,31 @@ const gameBoard = (() => {
       (board[2] === board[5] && board[2] === board[8] && board[2] !== "") ||
       (board[0] === board[4] && board[0] === board[8] && board[0] !== "") ||
       (board[2] === board[4] && board[2] === board[6] && board[2] !== "")
-    ) {
+    );
+  };
+
+  const winAction = () => {
+    if (checkWin) {
       console.log(
         currentPlayer.getSymbol() +
           " " +
           currentPlayer.getName() +
           " Won the game"
       );
-      clearBoard();
+      displayController.showRestart();
       return true;
     } else if (!board.includes("")) {
       console.log("Tie");
-      clearBoard();
+      displayController.showRestart();
       return true;
     }
     return false;
   };
-
   render();
 
   return {
     firstPlayer,
     secondPlayer,
+    clearBoard,
   };
 })();
