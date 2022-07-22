@@ -2,24 +2,34 @@ html,
 body {
   margin: 0;
   padding: 0;
+  background-color: #11468f;
 }
 
 main {
   display: flex;
   justify-content: center;
 }
-
+header {
+  background-color: #041562;
+  text-align: center;
+  padding: 25px;
+  color: white;
+  font-size: 72px;
+  border-bottom: 2px solid black;
+}
 #game-container {
+  margin-top: 50px;
   background-color: black;
+  color: white;
   display: grid;
+  box-shadow: 5px 5px 4px black;
   grid-template-columns: repeat(3, 10rem);
   grid-template-rows: repeat(3, 10rem);
-  gap: 2px;
-  border: solid black 2px;
+  gap: 10px;
 }
 
 #game-container > div {
-  background-color: white;
+  background-color: tomato;
   font-size: 7rem;
   display: grid;
   justify-content: center;
