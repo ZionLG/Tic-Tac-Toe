@@ -110,7 +110,7 @@ const gameBoard = (() => {
   };
 
   const winAction = () => {
-    if (checkWin) {
+    if (checkWin()) {
       console.log(
         currentPlayer.getSymbol() +
           " " +
