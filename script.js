@@ -16,6 +16,8 @@ const displayController = (() => {
   const $twoCard = document.getElementById("two-container");
   const $startBtn = document.getElementById("start-game");
   const $settingsBtn = document.getElementById("settings-btn");
+  const $aiCheck = document.getElementById("ai");
+  const $aiLevel = document.getElementById("ai-level").value;
 
   const $playerOneName = document.getElementById("player-one");
   const $playerTwoName = document.getElementById("player-two");
@@ -38,6 +40,7 @@ const displayController = (() => {
   const restartGame = () => {
     gameBoard.clearBoard();
     displayController.HideRestart();
+    gameBoard.startGame();
   };
 
   const startGame = (e) => {
@@ -55,6 +58,11 @@ const displayController = (() => {
       $twoCard.children[0].innerText = $playerTwoName.value + " - X";
     } else {
       $twoCard.children[0].innerText = "Player 2 - X";
+    }
+    if ($aiCheck.checked) {
+      gameBoard.enableAi($aiLevel);
+    } else {
+      gameBoard.enableAi("");
     }
     gameBoard.startGame();
   };
@@ -96,20 +104,25 @@ const displayController = (() => {
 
 const gameBoard = (() => {
   // prettier-ignore
-  let board = ["", "", "",
+  let _board = ["", "", "",
                "", "", "",
                "", "", ""];
 
-  let startedGame = false;
+  let _startedGame = false;
+  let _aiOn = "";
   const firstPlayer = player("Player 1", "O");
   const secondPlayer = player("Player 2", "X");
-  let currentPlayer = firstPlayer;
+  let _currentPlayer = firstPlayer;
 
   const $gameContainer = document.getElementById("game-container");
 
+  const enableAi = (aiLevel) => {
+    _aiOn = aiLevel;
+  };
+
   const createHTMLElement = (element) => {
     const gridBlock = document.createElement("div");
-    if (startedGame) {
+    if (_startedGame) {
       gridBlock.addEventListener("click", addMark);
     }
     gridBlock.innerText = element;
@@ -125,85 +138,117 @@ const gameBoard = (() => {
   };
 
   const startGame = () => {
-    startedGame = true;
+    _startedGame = true;
     render();
   };
 
   const pauseGame = () => {
-    startedGame = false;
+    _startedGame = false;
     render();
   };
+
   const render = () => {
     $gameContainer.replaceChildren();
-    board.forEach((element) => {
+    _board.forEach((element) => {
       $gameContainer.append(createHTMLElement(element));
     });
   };
 
   const addMark = (e) => {
     const index = Array.from(e.target.parentElement.children).indexOf(e.target);
-    if (!isValid(index, currentPlayer.getSymbol())) {
-      return false;
+    if (!isValid(index, _currentPlayer.getSymbol())) {
+      return;
     }
 
-    board[index] = currentPlayer.getSymbol();
+    _board[index] = _currentPlayer.getSymbol();
     render();
-    if (!winAction()) changePlayer();
-    return true;
+    if (!winAction()) {
+      changePlayer();
+
+      if (_aiOn === "easy") {
+        easyAi();
+      }
+    }
   };
 
   const changePlayer = () => {
-    console.log(currentPlayer.getName());
+    console.log(_currentPlayer.getName());
 
-    if (currentPlayer === firstPlayer) currentPlayer = secondPlayer;
-    else currentPlayer = firstPlayer;
+    if (_currentPlayer === firstPlayer) _currentPlayer = secondPlayer;
+    else _currentPlayer = firstPlayer;
   };
 
   const isValid = (index) => {
     return (
-      typeof index === "number" && board[index] === "" && index < board.length
+      typeof index === "number" && _board[index] === "" && index < _board.length
     );
   };
   const clearBoard = () => {
     // prettier-ignore
-    board = ["", "", "",
+    _board = ["", "", "",
              "", "", "",
              "", "", ""];
 
-    currentPlayer = firstPlayer;
+    _currentPlayer = firstPlayer;
     render();
   };
 
   const checkWin = () => {
     return (
-      (board[0] === board[1] && board[0] === board[2] && board[0] !== "") ||
-      (board[3] === board[4] && board[3] === board[5] && board[3] !== "") ||
-      (board[6] === board[7] && board[6] === board[8] && board[6] !== "") ||
-      (board[0] === board[3] && board[0] === board[6] && board[0] !== "") ||
-      (board[1] === board[4] && board[1] === board[7] && board[1] !== "") ||
-      (board[2] === board[5] && board[2] === board[8] && board[2] !== "") ||
-      (board[0] === board[4] && board[0] === board[8] && board[0] !== "") ||
-      (board[2] === board[4] && board[2] === board[6] && board[2] !== "")
+      (_board[0] === _board[1] &&
+        _board[0] === _board[2] &&
+        _board[0] !== "") ||
+      (_board[3] === _board[4] &&
+        _board[3] === _board[5] &&
+        _board[3] !== "") ||
+      (_board[6] === _board[7] &&
+        _board[6] === _board[8] &&
+        _board[6] !== "") ||
+      (_board[0] === _board[3] &&
+        _board[0] === _board[6] &&
+        _board[0] !== "") ||
+      (_board[1] === _board[4] &&
+        _board[1] === _board[7] &&
+        _board[1] !== "") ||
+      (_board[2] === _board[5] &&
+        _board[2] === _board[8] &&
+        _board[2] !== "") ||
+      (_board[0] === _board[4] &&
+        _board[0] === _board[8] &&
+        _board[0] !== "") ||
+      (_board[2] === _board[4] && _board[2] === _board[6] && _board[2] !== "")
     );
   };
 
   const winAction = () => {
     if (checkWin()) {
-      if (currentPlayer === firstPlayer) displayController.oneWon();
+      if (_currentPlayer === firstPlayer) displayController.oneWon();
       else displayController.twoWon();
 
       displayController.showRestart();
-
+      pauseGame();
       return true;
-    } else if (!board.includes("")) {
+    } else if (!_board.includes("")) {
       displayController.tie();
       displayController.showRestart();
-
+      pauseGame();
       return true;
     }
 
     return false;
   };
+
+  const easyAi = () => {
+    let markIndex;
+    while (!isValid(markIndex, _currentPlayer.getSymbol())) {
+      markIndex = Math.floor(Math.random() * 9);
+    }
+
+    _board[markIndex] = _currentPlayer.getSymbol();
+    render();
+    if (!winAction()) changePlayer();
+  };
+
   render();
 
   return {
@@ -212,5 +257,6 @@ const gameBoard = (() => {
     clearBoard,
     startGame,
     pauseGame,
+    enableAi,
   };
 })();
